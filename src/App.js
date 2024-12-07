@@ -49,11 +49,11 @@ function App() {
       return;
     }
   
-    const messageInput = "1";
+    const activateHash = "6ed6f8d519d6c5e733803c3bbb1043b4";
     const encoder = new TextEncoder();
   
     try {
-      await bluetoothCharacteristic.writeValue(encoder.encode(messageInput));
+      await bluetoothCharacteristic.writeValue(encoder.encode(activateHash));
       console.log("Notificaciones habilitadas");
     } catch (error) {
       console.error("Error al enviar mensaje:", error);
