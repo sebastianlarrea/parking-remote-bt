@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap");
+
+body {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.main {
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  margin-top: 20px;
+
+  &__icon {
+    color: #084b6f;
+    width: 50px;
+    height: 50px;
+  }
+
+  &__title {
+    font-family: "Parkinsans";
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-size: 30px;
+    color: #084b6f;
+  }
+}
+
+.subheader {
+  font-family: "Parkinsans";
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 20px;
+
+  color: #7A7A7A;
+}
+
+.content {
+  height: calc(100vh - 350px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.circle-button {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #333333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1); /* Sombra mejorada */
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.inner-circle {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #333333;
+  position: relative;
+  z-index: 2;
+}
+
+.button-text {
+  font-family: "Parkinsans";
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 14px;
+  color: #000000;
+  text-align: center;
+  z-index: 3;
+}
+
+.spinner {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border: 10px solid transparent;
+  border-top: 10px solid #084b6f;
+  border-radius: 50%;
+  z-index: 1;
+  display: none;
+}
+
+.spinner.active {
+  display: block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 12px 24px rgba(0, 0, 0, 0.2); 
+
+  margin-top: 50px;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.connect-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.status-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.status-text {
+  font-family: "Parkinsans";
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 14px;
+}
+
+.status-indicator.connected {
+  background-color: #4CAF50;
+}
+
+.status-indicator.disconnected {
+  background-color: #f44336;
+}
