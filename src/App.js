@@ -111,6 +111,7 @@ function App() {
           <span className="status-text">{isConnected ? 'Conectado' : 'Desconectado'}</span>
         </div>
         <button className="connect-button" onClick={connectBluetooth}>
+          <span className="connect-button__text">Conectar</span>
           <FaBluetooth />
         </button>
       </div>
