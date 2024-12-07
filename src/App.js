@@ -49,7 +49,7 @@ function App() {
       return;
     }
   
-    const activateHash = "6ed6f8d519d6c5e733803c3bbb1043b4";
+    const activateHash = "6ed6f8d519d6c5e733";
     const encoder = new TextEncoder();
   
     try {
@@ -112,7 +112,7 @@ function App() {
         </div>
         <button className="connect-button" onClick={connectBluetooth}>
           <span className="connect-button__text">Conectar</span>
-          <FaBluetooth />
+          <FaBluetooth className="connect-button__icon"/>
         </button>
       </div>
 
