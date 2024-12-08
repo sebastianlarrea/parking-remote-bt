@@ -187,3 +187,14 @@ body {
 .status-indicator.disconnected {
   background-color: #f44336;
 }
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Parkinsans";
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 16px;
+}

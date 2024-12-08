@@ -9,7 +9,7 @@ import Alert from "@mui/material/Alert";
 import "./App.scss";
 
 function App() {
-  const [openAlert, setOpenAlert] = useState(false);
+  const [snackbar, setSnackbar] = useState({ show: false, message: "" });
   const [isConnected, setIsConnected] = useState(false);
   const [bluetoothDevice, setBluetoothDevice] = useState(null);
   const [gateState, setGateState] = useState("Cerrado");
@@ -45,7 +45,7 @@ function App() {
       setIsConnected(true);
       device.addEventListener("gattserverdisconnected", onDisconnected);
     } catch (error) {
-      console.error("Error al conectar Bluetooth:", error);
+      return null;
     } 
   }
 
@@ -55,7 +55,7 @@ function App() {
 
   async function sendGateAction() {
     if (!bluetoothDevice) {
-      console.error("No hay conexión Bluetooth establecida.");
+      setSnackbar({ show: true, message: "No se ha conectado a ningún dispositivo Bluetooth" });
       return;
     }
 
@@ -64,9 +64,8 @@ function App() {
 
     try {
       await bluetoothDevice.writeValue(encoder.encode(activateHash));
-      console.log("Notificaciones habilitadas");
     } catch (error) {
-      console.error("Error al enviar mensaje:", error);
+      setSnackbar({ show: true, message: "Error al enviar la acción al dispositivo Bluetooth" });
     }
   }
 
@@ -81,7 +80,7 @@ function App() {
 
   function handleActionClick() {
     if (!isConnected) {
-      return setOpenAlert(true);
+      return setSnackbar({ show: true, message: "Debes conectarte al bluetooth para poder ejecutar este tipo de acciones" });
     }
 
     switch (gateState) {
@@ -112,11 +111,11 @@ function App() {
   }
 
   return (
-    <section className="main">
-      <div className="header">
+    <main className="main">
+      <header className="header">
         <FaRegBuilding className="header__icon" />
         <h1 className="header__title">Torre Angel</h1>
-      </div>
+      </header>
       <h2 className="subheader">Control de Acceso al Parqueadero</h2>
 
       <div className="card">
@@ -145,10 +144,14 @@ function App() {
         </button>
       </div>
 
+      <footer className="footer">
+        <p className="footer__text">By <strong>Sebastián Larrea</strong></p>
+      </footer>
+
       <Snackbar
-        open={openAlert}
+        open={snackbar.show}
         autoHideDuration={3000}
-        onClose={() => setOpenAlert(false)}
+        onClose={() => setSnackbar({ show: false })}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
@@ -156,10 +159,10 @@ function App() {
           variant="filled"
           sx={{ width: "100%" }}
         >
-          Debes conectarte al bluetooth para poder ejecutar este tipo de acciones
+          {snackbar.message}
         </Alert>
       </Snackbar>
-    </section>
+    </main>
   );
 }
 
