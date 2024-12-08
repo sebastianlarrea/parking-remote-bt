@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+
 import { FaRegBuilding } from "react-icons/fa";
 import { FaBluetooth } from "react-icons/fa";
 
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 import "./App.scss";
 
-let bluetoothCharacteristic;
-
 function App() {
+  const [openAlert, setOpenAlert] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [bluetoothDevice, setBluetoothDevice] = useState(null);
   const [gateState, setGateState] = useState("Cerrado");
 
   const GateState = {
@@ -19,6 +23,11 @@ function App() {
   };
 
   async function connectBluetooth() {
+    if (isConnected) {
+      bluetoothDevice.server.disconnect();
+      return setIsConnected(false);
+    }
+
     try {
       const device = await navigator.bluetooth.requestDevice({
         filters: [{ name: "BT05" }],
@@ -28,15 +37,16 @@ function App() {
       const service = await server.getPrimaryService(
         "0000ffe0-0000-1000-8000-00805f9b34fb"
       );
-      bluetoothCharacteristic = await service.getCharacteristic(
+      const bluetoothCharacteristic = await service.getCharacteristic(
         "0000ffe1-0000-1000-8000-00805f9b34fb"
       );
-      
+
+      setBluetoothDevice(bluetoothCharacteristic);
       setIsConnected(true);
-      device.addEventListener('gattserverdisconnected', onDisconnected);
+      device.addEventListener("gattserverdisconnected", onDisconnected);
     } catch (error) {
       console.error("Error al conectar Bluetooth:", error);
-    }
+    } 
   }
 
   const onDisconnected = () => {
@@ -44,16 +54,16 @@ function App() {
   };
 
   async function sendGateAction() {
-    if (!bluetoothCharacteristic) {
+    if (!bluetoothDevice) {
       console.error("No hay conexión Bluetooth establecida.");
       return;
     }
-  
+
     const activateHash = "6ed6f8d519d6c5e733";
     const encoder = new TextEncoder();
-  
+
     try {
-      await bluetoothCharacteristic.writeValue(encoder.encode(activateHash));
+      await bluetoothDevice.writeValue(encoder.encode(activateHash));
       console.log("Notificaciones habilitadas");
     } catch (error) {
       console.error("Error al enviar mensaje:", error);
@@ -70,6 +80,10 @@ function App() {
   }
 
   function handleActionClick() {
+    if (!isConnected) {
+      return setOpenAlert(true);
+    }
+
     switch (gateState) {
       case GateState.CLOSED:
         setGateState(GateState.OPENING);
@@ -104,15 +118,21 @@ function App() {
         <h1 className="header__title">Torre Angel</h1>
       </div>
       <h2 className="subheader">Control de Acceso al Parqueadero</h2>
-      
+
       <div className="card">
         <div className="status-container">
-          <div className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}></div>
-          <span className="status-text">{isConnected ? 'Conectado' : 'Desconectado'}</span>
+          <div
+            className={`status-indicator ${
+              isConnected ? "connected" : "disconnected"
+            }`}
+          ></div>
+          <span className="status-text">
+            {isConnected ? "Conectado" : "Desconectado"}
+          </span>
         </div>
         <button className="connect-button" onClick={connectBluetooth}>
-          <span className="connect-button__text">Conectar</span>
-          <FaBluetooth className="connect-button__icon"/>
+          <span className="connect-button__text">{!isConnected ? 'Conectar' : 'Desconectar'}</span>
+          <FaBluetooth className="connect-button__icon" />
         </button>
       </div>
 
@@ -124,6 +144,21 @@ function App() {
           </div>
         </button>
       </div>
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={3000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Debes conectarte al bluetooth para poder ejecutar este tipo de acciones
+        </Alert>
+      </Snackbar>
     </section>
   );
 }
