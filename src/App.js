@@ -23,9 +23,11 @@ function App() {
   };
 
   async function connectBluetooth() {
-    if (isConnected) {
-      bluetoothDevice.server.disconnect();
-      return setIsConnected(false);
+    if (isConnected && bluetoothDevice) {
+      bluetoothDevice.service.device.gatt.disconnect();
+      setIsConnected(false);
+      setBluetoothDevice(null);
+      return;
     }
 
     try {
@@ -65,7 +67,7 @@ function App() {
     try {
       await bluetoothDevice.writeValue(encoder.encode(activateHash));
     } catch (error) {
-      setSnackbar({ show: true, message: "Error al enviar la acción al dispositivo Bluetooth" });
+      return null;
     }
   }
 
