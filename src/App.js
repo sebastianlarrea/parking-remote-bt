@@ -65,7 +65,7 @@ function App() {
     try {
       await bluetoothDevice.writeValue(encoder.encode(activateHash));
     } catch (error) {
-      setSnackbar({ show: true, message: "Error al enviar la acción al dispositivo Bluetooth" });
+      return null;
     }
   }
 
